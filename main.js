@@ -16,10 +16,29 @@ function resize() {
   // document.getElementById('mapa').style.height = window.innerHeight +"px";
   document.getElementById('mapa').style.gridTemplateRows = "repeat("+_FILAS+","+(window.innerHeight/_FILAS)+"px)";
   document.getElementById('mapa').style.gridTemplateColumns = "repeat("+_COL+","+(window.innerWidth/_COL)+"px)";
+  // Character size
+  document.getElementsByClassName('personaje')[0].style.setProperty('--height-character',((window.innerHeight/_FILAS)*2.2+'px'));
+  // Character margin
+  document.getElementsByClassName('personaje')[0].style.setProperty('--margin-character',(-window.innerHeight/_FILAS+'px'+" 0px 0px 0px"));
+
+}
+// Resize de las pisadas
+function resizeElements() {
+
+  aux_array = document.getElementsByClassName('pisado');
+
+  for (var i = 0; i < aux_array.length; i++) {
+    // Pisada size
+    aux_array[i].style.setProperty('--height-pisado',((window.innerHeight/_FILAS)*2+'px'));
+    // Pisada margin
+    aux_array[i].style.setProperty('--margin-pisado',(-(window.innerHeight/_FILAS)+'px'+" 0px 0px 0px"));
+  }
+
+
+
 }
 
-
-// mapa inicial
+// Mapa inicial
   var mapa = [
               [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
               [0,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
@@ -38,7 +57,6 @@ function resize() {
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
   ];
-
   // mapa [1][9];
   // Posicion inicial
   let personajeX = 9;
@@ -46,12 +64,9 @@ function resize() {
 
 
 
-
-
-
-
-  resize();
   mostrarMapa();
+
+
 
 
   // Dibujar mapa
@@ -86,6 +101,7 @@ function resize() {
         }
         fila++;
       }
+      resize();
     };
 
     // Movimiento
@@ -135,7 +151,8 @@ function resize() {
           personajeX--;
         }
       }
-
+      resize();
+      resizeElements();
     }
   // Inputs desde teclado
   document.onkeydown = function(e) {
