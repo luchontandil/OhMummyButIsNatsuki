@@ -84,7 +84,7 @@ for (var i = 0; i < arr_mapa.length; i++) {
     function mover(dirreccion) {
       if(dirreccion=="arriba"){
         if(mapa[personajeY-1][personajeX] != 0 && mapa[personajeY-1][personajeX] != 4 && mapa[personajeY-1][personajeX] != 6){
-          mapa[personajeY][personajeX]   = 3;
+          mapaPisadas[personajeY-1][personajeX]   = 3;
           mapa[personajeY-1][personajeX] = 1;
           arr_mapa[personajeY][personajeX].classList.remove('personaje');
           arr_mapa[personajeY][personajeX].classList.add('pisado');
@@ -95,7 +95,7 @@ for (var i = 0; i < arr_mapa.length; i++) {
       }
       else if(dirreccion=="abajo"){
         if(mapa[personajeY+1][personajeX] != 0 && mapa[personajeY+1][personajeX] != 4 && mapa[personajeY+1][personajeX] != 6){
-          mapa[personajeY][personajeX]   = 3;
+          mapaPisadas[personajeY+1][personajeX]   = 3;
           mapa[personajeY+1][personajeX] = 1;
           arr_mapa[personajeY][personajeX].classList.remove('personaje');
           arr_mapa[personajeY][personajeX].classList.add('pisado');
@@ -106,7 +106,7 @@ for (var i = 0; i < arr_mapa.length; i++) {
       }
       else if(dirreccion=="der"){
         if(mapa[personajeY][personajeX+1] != 0 && mapa[personajeY][personajeX+1] != 4 && mapa[personajeY][personajeX+1] != 6){
-          mapa[personajeY][personajeX]   = 3;
+          mapaPisadas[personajeY][personajeX+1]   = 3;
           mapa[personajeY][personajeX+1] = 1;
           arr_mapa[personajeY][personajeX].classList.remove('personaje');
           arr_mapa[personajeY][personajeX].classList.add('pisado');
@@ -117,7 +117,7 @@ for (var i = 0; i < arr_mapa.length; i++) {
       }
       else if(dirreccion=="izq"){
         if(mapa[personajeY][personajeX-1] != 0 && mapa[personajeY][personajeX-1] != 4 && mapa[personajeY][personajeX-1] != 6){
-          mapa[personajeY][personajeX]   = 3;
+          mapaPisadas[personajeY][personajeX-1]   = 3;
           mapa[personajeY][personajeX-1] = 1;
           arr_mapa[personajeY][personajeX].classList.remove('personaje');
           arr_mapa[personajeY][personajeX].classList.add('pisado');
@@ -130,33 +130,35 @@ for (var i = 0; i < arr_mapa.length; i++) {
       resizeElements();
       checkCajas();
     }
-    function checkCajas() {
-      mirarAlrededor(2,3); // y,x de cada caja
-      mirarAlrededor(y,x);
-    }
-    function mirarAlrededor(y,x) {
-      if ( y+1 == 3
-        && y-2 == 3){
 
+    function checkCajas() {
+      //primer fila
+      mirarAlrededor(3,2);mirarAlrededor(3,6);mirarAlrededor(3,10);mirarAlrededor(3,14);mirarAlrededor(3,18);
+      mirarAlrededor(6,2);mirarAlrededor(6,6);mirarAlrededor(6,10); mirarAlrededor(6,14); mirarAlrededor(6,18);
+      mirarAlrededor(9,2);mirarAlrededor(9,6);mirarAlrededor(9,10); mirarAlrededor(9,14); mirarAlrededor(9,18);
+      mirarAlrededor(12,2);mirarAlrededor(12,6);mirarAlrededor(12,10); mirarAlrededor(12,14); mirarAlrededor(12,18);
+    }
+
+    function mirarAlrededor(y,x) {
+      if (
+           mapaPisadas[y-1][x-1] == 3
+        && mapaPisadas[y-1][x  ] == 3
+        && mapaPisadas[y-1][x+1] == 3
+        && mapaPisadas[y-1][x+2] == 3
+        && mapaPisadas[y-1][x+3] == 3
+        && mapaPisadas[y  ][x+3] == 3
+        && mapaPisadas[y+1][x+3] == 3
+        && mapaPisadas[y+2][x+3] == 3
+        && mapaPisadas[y+2][x+2] == 3
+        && mapaPisadas[y+2][x+1] == 3
+        && mapaPisadas[y+2][x-1] == 3
+        && mapaPisadas[y+1][x-1] == 3
+        && mapaPisadas[y  ][x-1] == 3
+      ){
+        console.log("PINTAR  y:"+y+" x:"+x);
+        // descubrir(x,y);
       }
     }
-    // function checkArround() {
-    //   //arriba
-    //   if (mapa[personajeY-1][personajeX] = 4) {
-    //     mirarBordes(params = {X:personajeY-1,Y:personajeX});
-    //   }
-    // }
-    // function mirarBordes(params) {
-    //   var x = params[0];
-    //   var y = params[1];
-    //   if (params[2]!= "undefined") {
-    //     var visitado = params[2];
-    //     console.log(params);
-    //   }
-    //   else {
-    //     mirarBordes({x:personajeY-1,y:personajeX-1,array:[x,y]});
-    //   }
-    // }
 
   // Inputs desde teclado
   document.onkeydown = function(e) {
@@ -177,10 +179,10 @@ for (var i = 0; i < arr_mapa.length; i++) {
       mover("arriba");
     }
   }
+
   // Set the size of elements to fit
   function resize() {
     // Map size
-
     document.getElementById('mapa').style.gridTemplateRows = "repeat("+_FILAS+","+(window.innerHeight/_FILAS)+"px)";
     document.getElementById('mapa').style.gridTemplateColumns = "repeat("+_COL+","+(window.innerWidth/_COL)+"px)";
     // Character size
@@ -198,19 +200,30 @@ for (var i = 0; i < arr_mapa.length; i++) {
       // Pisada size
       aux_array[i].style.setProperty('--height-pisado',((window.innerHeight/_FILAS)*2+'px'));
       // Pisada margin
-      aux_array[i].style.setProperty('--margin-pisado',(-(window.innerHeight/_FILAS)+'px'+" 0px 0px 0px"));
+      aux_array[i].style.setProperty('--margin-pisado',(-(window.innerHeight/_FILAS)/1.5+'px'+" 0px 0px 0px"));
     }
   }
 
 
-
-
-
-
-
-
-
-
+// Array para llevar que casillas se pisaron
+  var mapaPisadas = [
+              [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
+              [0,0,0,0,0, 0,0,0,0,3, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 6,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
+  ];
 
 
 
