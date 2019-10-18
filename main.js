@@ -10,13 +10,20 @@ var arr_mapa = new Array(_FILAS);
 for (var i = 0; i < arr_mapa.length; i++) {
   arr_mapa[i] = new Array(_COL);
 }
-
+// 1 = personaje
+// 2 = camino
+// 3 = camino pisado
+// 4 = pared con tesoro
+// 6 = tesoro revelado
+// 0 = pared
+// S = Score
+// V = Vidas
 // Mapa inicial
   var mapa = [
               [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
               [0,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 6,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
@@ -126,27 +133,36 @@ for (var i = 0; i < arr_mapa.length; i++) {
           personajeX--;
         }
       }
-      resize();
-      resizeElements();
       checkCajas();
     }
 
     function checkCajas() {
       //primer fila
-      mirarAlrededor(3,2);mirarAlrededor(3,6);mirarAlrededor(3,10);mirarAlrededor(3,14);mirarAlrededor(3,18);
-      mirarAlrededor(6,2);mirarAlrededor(6,6);mirarAlrededor(6,10); mirarAlrededor(6,14); mirarAlrededor(6,18);
-      mirarAlrededor(9,2);mirarAlrededor(9,6);mirarAlrededor(9,10); mirarAlrededor(9,14); mirarAlrededor(9,18);
-      mirarAlrededor(12,2);mirarAlrededor(12,6);mirarAlrededor(12,10); mirarAlrededor(12,14); mirarAlrededor(12,18);
+      if(mapa[3][2+1]!=6)mirarAlrededor(3,2);
+      if(mapa[3][6+1]!=6)mirarAlrededor(3,6);
+      if(mapa[3][10+1]!=6)mirarAlrededor(3,10);
+      if(mapa[3][14+1]!=6)mirarAlrededor(3,14)
+      if(mapa[3][18+1]!=6)mirarAlrededor(3,18);
+      if(mapa[6][2+1]!=6)mirarAlrededor(6,2);
+      if(mapa[6][6+1]!=6)mirarAlrededor(6,6);
+      if(mapa[6][10+1]!=6)mirarAlrededor(6,10);
+      if(mapa[6][14+1]!=6)mirarAlrededor(6,14);
+      if(mapa[6][18+1]!=6)mirarAlrededor(6,18);
+      if(mapa[9][2+1]!=6)mirarAlrededor(9,2);
+      if(mapa[9][6+1]!=6)mirarAlrededor(9,6);
+      if(mapa[9][10+1]!=6)mirarAlrededor(9,10);
+      if(mapa[9][14+1]!=6)mirarAlrededor(9,14);
+      if(mapa[9][18+1]!=6)mirarAlrededor(9,18);
+      if(mapa[12][2+1]!=6)mirarAlrededor(12,2);
+      if(mapa[12][6+1]!=6)mirarAlrededor(12,6);
+      if(mapa[12][10+1]!=6)mirarAlrededor(12,10);
+      if(mapa[12][14+1]!=6)mirarAlrededor(12,14);
+      if(mapa[12][18+1]!=6)mirarAlrededor(12,18);
     }
 
     function mirarAlrededor(y,x) {
       if (
-           mapaPisadas[y-1][x-1] == 3
-        && mapaPisadas[y-1][x  ] == 3
-        && mapaPisadas[y-1][x+1] == 3
-        && mapaPisadas[y-1][x+2] == 3
-        && mapaPisadas[y-1][x+3] == 3
-        && mapaPisadas[y  ][x+3] == 3
+           mapaPisadas[y  ][x+3] == 3
         && mapaPisadas[y+1][x+3] == 3
         && mapaPisadas[y+2][x+3] == 3
         && mapaPisadas[y+2][x+2] == 3
@@ -154,9 +170,16 @@ for (var i = 0; i < arr_mapa.length; i++) {
         && mapaPisadas[y+2][x-1] == 3
         && mapaPisadas[y+1][x-1] == 3
         && mapaPisadas[y  ][x-1] == 3
+
+        && mapaPisadas[y-1][x-1] == 3
+        && mapaPisadas[y-1][x  ] == 3
+        && mapaPisadas[y-1][x+1] == 3
+        && mapaPisadas[y-1][x+2] == 3
+        && mapaPisadas[y-1][x+3] == 3
       ){
-        console.log("PINTAR  y:"+y+" x:"+x);
         // descubrir(x,y);
+        mapa[y][x+1]=6;
+        arr_mapa[y][x+1].classList.add('llave');
       }
     }
 
@@ -180,31 +203,26 @@ for (var i = 0; i < arr_mapa.length; i++) {
     }
   }
 
-  // Set the size of elements to fit
+  // Setteo las propiedades de las clases segun el tamaño de la ventana en el tag style del dom
   function resize() {
+    style = document.getElementsByTagName('style')[0];
     // Map size
-    document.getElementById('mapa').style.gridTemplateRows = "repeat("+_FILAS+","+(window.innerHeight/_FILAS)+"px)";
-    document.getElementById('mapa').style.gridTemplateColumns = "repeat("+_COL+","+(window.innerWidth/_COL)+"px)";
+    style.innerHTML +=
+    "#mapa{ grid-template-rows: repeat("+_FILAS+","+(window.innerHeight/_FILAS)+"px); \n"+
+           "grid-template-columns: repeat("+_COL+","+(window.innerWidth/_COL)+"px)"+"}\n";
     // Character size
-    document.getElementsByClassName('personaje')[0].style.setProperty('--height-character',((window.innerHeight/_FILAS)*2.2+'px'));
-    // Character margin
-    document.getElementsByClassName('personaje')[0].style.setProperty('--margin-character',(-window.innerHeight/_FILAS+'px'+" 0px 0px 0px"));
-    // Llave size
-    // document.getElementsByClassName('llave')[0].style.setProperty('--margin-llave',("0px 0px 0px "+(-(window.innerWidth/_COL))+"px"));
-    document.getElementsByClassName('llave')[0].style.setProperty('--height-llave',(((window.innerHeight/_FILAS)*2)+'px'));
+    style.innerHTML +=
+    ".personaje{--height-character: "+(window.innerHeight/_FILAS)*2.2+"px);\n"+
+               "--margin-character: "+(-window.innerHeight/_FILAS)/2+"px 0px 0px 0px }\n";
+    // Pisadas size
+    style.innerHTML +=
+    ".pisado{--height-pisado:"+(window.innerHeight/_FILAS)*2+"px;\n"+
+            "--margin-pisado:"+(-(window.innerHeight/_FILAS)/1.5)+"px 0px 0px 0px;\n}\n";
+    // Llaves size
+    style.innerHTML +=
+    ".llave{ --height-llave:"+((window.innerHeight/_FILAS)*2)+"px;\n"
+    "\n}";
   }
-  // Resize de las pisadas
-  function resizeElements() {
-    aux_array = document.getElementsByClassName('pisado');
-    for (var i = 0; i < aux_array.length; i++) {
-      // Pisada size
-      aux_array[i].style.setProperty('--height-pisado',((window.innerHeight/_FILAS)*2+'px'));
-      // Pisada margin
-      aux_array[i].style.setProperty('--margin-pisado',(-(window.innerHeight/_FILAS)/1.5+'px'+" 0px 0px 0px"));
-    }
-  }
-
-
 // Array para llevar que casillas se pisaron
   var mapaPisadas = [
               [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
@@ -224,7 +242,4 @@ for (var i = 0; i < arr_mapa.length; i++) {
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
   ];
-
-
-
 }

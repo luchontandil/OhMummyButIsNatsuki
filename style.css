@@ -24,6 +24,8 @@
 }
 
 .score {
+  --score:"0000000";
+  --score-text:"Score::";
   background-color: var(--color-pared);
   background-size: 100%;
   color: pink;
@@ -32,13 +34,14 @@
 
 .score:after {
   font-size: 28px;
-  content: "Score::0000000";
+  content: var(--score-text)var(--score);
   overflow-x: visible;
   display: block;
 }
 
 .vidas {
-  --vidas : "Lifes::5";
+  --vidas : "5";
+  --vidas-text:"Lifes::";
   background-color: var(--color-pared);
   background-size: 100%;
   overflow-x: visible;
@@ -48,7 +51,7 @@
 }
 
 .vidas::after {
-  content: var(--vidas);
+  content: var(--vidas-text)var(--vidas);
 }
 
 .personaje {
@@ -68,7 +71,7 @@
   height: var(--height-character);
   content: "";
   z-index: 15;
-  animation: saltar 0.5s;
+  animation: saltar 0.5s steps(8);
 }
 
 @keyframes saltar {
@@ -98,7 +101,7 @@
   height: var(--height-pisado);
   content: "";
   z-index: 3;
-  animation: subir 1s infinite;
+  /* animation: subir 1s infinite steps(1); */
 }
 
 @keyframes subir {
@@ -109,16 +112,16 @@
       transform: translateY(0px);
   }
 }
+
 .llave{
   --height-llave: 30px;
-  --margin-llave: 0px 0px 0px 0px;
+  /* --margin-llave: 0px 0px 0px 0px; */
   background-color: var(--color-pared);
 }
 .llave:after{
   background-position: center;
   background-size: 100%;
   background-image: url("llave2.png");
-  z-index: 5;
   content: "";
   display: inline-block;
   background-repeat: no-repeat;
@@ -126,12 +129,23 @@
   height: var(--height-llave);
   width: 100%;
   animation-direction: normal;
-  animation: girar 1s infinite linear;
+  animation: girar 1s infinite steps(18), aparecer 1s steps(16);
   z-index: 7;
 }
 @keyframes girar {
   100%{
-    transform: rotateY(-360deg)
+    transform: rotateY(-360deg);
+  }
+}
+@keyframes aparecer {
+  0%{
+    transform: scaleX(0.2) scaleY(0.2);
+  }
+  80%{
+    transform: scaleX(1.2) scaleY(1.2);
+  }
+  100%{
+      transform: scaleX(1) scaleY(1);
   }
 }
 
