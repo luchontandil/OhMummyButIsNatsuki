@@ -2,22 +2,31 @@ window.onload = function() {
 
 const _COL = 23;
 const _FILAS =  16;
-var mapa_div = document.getElementById('mapa');
-var arr_mapa_div;
+let mapa_div = document.getElementById('mapa');
+let arr_mapa_div;
 
 //genero un array bi-dimensional para guardar todos los divs mas adelante
 var arr_mapa = new Array(_FILAS);
 for (var i = 0; i < arr_mapa.length; i++) {
   arr_mapa[i] = new Array(_COL);
 }
+let hayLlave = false;
+// 0 = pared
 // 1 = personaje
 // 2 = camino
 // 3 = camino pisado
 // 4 = pared con tesoro
-// 6 = tesoro revelado
-// 0 = pared
+// 6 = llave
+// 7 = urna
+// 8 = pergamino / espada
+// 9 = vacio /
 // S = Score
 // V = Vidas
+let arr_items = [6,7,8,9,9 ,9,9,9,9,9
+                ,9,9,9,9,9 ,9,9,9,9,9];
+shuffle(arr_items);
+let premioActual = 0;
+console.log(arr_items);
 // Mapa inicial
   var mapa = [
               [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
@@ -44,10 +53,8 @@ for (var i = 0; i < arr_mapa.length; i++) {
 
 
 
+
   mostrarMapa();
-
-
-
 
 
   // Dibujar mapa
@@ -135,31 +142,30 @@ for (var i = 0; i < arr_mapa.length; i++) {
       }
       checkCajas();
     }
-
+    // Ver caja por caja si esta pintada o no, si no ejecutar mirarAlrededor()
     function checkCajas() {
-      //primer fila
-      if(mapa[3][2+1]!=6)mirarAlrededor(3,2);
-      if(mapa[3][6+1]!=6)mirarAlrededor(3,6);
-      if(mapa[3][10+1]!=6)mirarAlrededor(3,10);
-      if(mapa[3][14+1]!=6)mirarAlrededor(3,14)
-      if(mapa[3][18+1]!=6)mirarAlrededor(3,18);
-      if(mapa[6][2+1]!=6)mirarAlrededor(6,2);
-      if(mapa[6][6+1]!=6)mirarAlrededor(6,6);
-      if(mapa[6][10+1]!=6)mirarAlrededor(6,10);
-      if(mapa[6][14+1]!=6)mirarAlrededor(6,14);
-      if(mapa[6][18+1]!=6)mirarAlrededor(6,18);
-      if(mapa[9][2+1]!=6)mirarAlrededor(9,2);
-      if(mapa[9][6+1]!=6)mirarAlrededor(9,6);
-      if(mapa[9][10+1]!=6)mirarAlrededor(9,10);
-      if(mapa[9][14+1]!=6)mirarAlrededor(9,14);
-      if(mapa[9][18+1]!=6)mirarAlrededor(9,18);
-      if(mapa[12][2+1]!=6)mirarAlrededor(12,2);
-      if(mapa[12][6+1]!=6)mirarAlrededor(12,6);
-      if(mapa[12][10+1]!=6)mirarAlrededor(12,10);
-      if(mapa[12][14+1]!=6)mirarAlrededor(12,14);
-      if(mapa[12][18+1]!=6)mirarAlrededor(12,18);
+      if(mapaPisadas[3][2+1]!= true)mirarAlrededor(3,2);
+      if(mapaPisadas[3][6+1]!= true)mirarAlrededor(3,6);
+      if(mapaPisadas[3][10+1]!=true)mirarAlrededor(3,10);
+      if(mapaPisadas[3][14+1]!=true)mirarAlrededor(3,14)
+      if(mapaPisadas[3][18+1]!=true)mirarAlrededor(3,18);
+      if(mapaPisadas[6][2+1]!=true)mirarAlrededor(6,2);
+      if(mapaPisadas[6][6+1]!=true)mirarAlrededor(6,6);
+      if(mapaPisadas[6][10+1]!=true)mirarAlrededor(6,10);
+      if(mapaPisadas[6][14+1]!=true)mirarAlrededor(6,14);
+      if(mapaPisadas[6][18+1]!=true)mirarAlrededor(6,18);
+      if(mapaPisadas[9][2+1]!=true)mirarAlrededor(9,2);
+      if(mapaPisadas[9][6+1]!=true)mirarAlrededor(9,6);
+      if(mapaPisadas[9][10+1]!=true)mirarAlrededor(9,10);
+      if(mapaPisadas[9][14+1]!=true)mirarAlrededor(9,14);
+      if(mapaPisadas[9][18+1]!=true)mirarAlrededor(9,18);
+      if(mapaPisadas[12][2+1]!=true)mirarAlrededor(12,2);
+      if(mapaPisadas[12][6+1]!=true)mirarAlrededor(12,6);
+      if(mapaPisadas[12][10+1]!=true)mirarAlrededor(12,10);
+      if(mapaPisadas[12][14+1]!=true)mirarAlrededor(12,14);
+      if(mapaPisadas[12][18+1]!=true)mirarAlrededor(12,18);
     }
-
+    // Checkea uno por uno los cuadros adyacentes para ver si estan todos "pisados"
     function mirarAlrededor(y,x) {
       if (
            mapaPisadas[y  ][x+3] == 3
@@ -177,10 +183,29 @@ for (var i = 0; i < arr_mapa.length; i++) {
         && mapaPisadas[y-1][x+2] == 3
         && mapaPisadas[y-1][x+3] == 3
       ){
-        // descubrir(x,y);
-        mapa[y][x+1]=6;
-        arr_mapa[y][x+1].classList.add('llave');
+        revelarCaja(y,x);
+        mapaPisadas[y][x+1] = true;
       }
+    }
+    function revelarCaja(y,x) {
+      mapaPisadas[y][x+1] = arr_items[premioActual];
+
+      switch (arr_items[premioActual]) {
+        case 6:
+        arr_mapa[y][x+1].classList.add('llave');
+        hayLlave = true;
+        console.log("llave revelada");
+        break;
+        case 7: arr_mapa[y][x+1].classList.add('camino');
+        break;
+        case 8: arr_mapa[y][x+1].classList.add('camino');
+        break;
+        case 9: arr_mapa[y][x+1].classList.add('camino');
+        break;
+        default:
+        break;
+      }
+      premioActual++;
     }
 
   // Inputs desde teclado
@@ -203,17 +228,19 @@ for (var i = 0; i < arr_mapa.length; i++) {
     }
   }
 
+
   // Setteo las propiedades de las clases segun el tamaño de la ventana en el tag style del dom
   function resize() {
     style = document.getElementsByTagName('style')[0];
+    style.innerHTML = "";
     // Map size
     style.innerHTML +=
     "#mapa{ grid-template-rows: repeat("+_FILAS+","+(window.innerHeight/_FILAS)+"px); \n"+
            "grid-template-columns: repeat("+_COL+","+(window.innerWidth/_COL)+"px)"+"}\n";
     // Character size
     style.innerHTML +=
-    ".personaje{--height-character: "+(window.innerHeight/_FILAS)*2.2+"px);\n"+
-               "--margin-character: "+(-window.innerHeight/_FILAS)/2+"px 0px 0px 0px }\n";
+    ".personaje{--height-character: "+(window.innerHeight/_FILAS)*2.2+"px;\n"+
+               "--margin-character: "+(-window.innerHeight/_FILAS)+"px 0px 0px 0px }\n";
     // Pisadas size
     style.innerHTML +=
     ".pisado{--height-pisado:"+(window.innerHeight/_FILAS)*2+"px;\n"+
@@ -223,6 +250,10 @@ for (var i = 0; i < arr_mapa.length; i++) {
     ".llave{ --height-llave:"+((window.innerHeight/_FILAS)*2)+"px;\n"
     "\n}";
   }
+  // re-size en real time
+  window.addEventListener('resize', function(){
+    resize();
+  });
 // Array para llevar que casillas se pisaron
   var mapaPisadas = [
               [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
@@ -242,4 +273,24 @@ for (var i = 0; i < arr_mapa.length; i++) {
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
   ];
+  // funcion para shuflear un array totalmente robada de por ahi
+  function shuffle(array) {
+    let counter = array.length;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        let index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        let temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+
+    return array;
+  }
 }
