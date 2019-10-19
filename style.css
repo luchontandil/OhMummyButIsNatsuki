@@ -54,35 +54,41 @@
   content: var(--vidas-text)var(--vidas);
 }
 
-.personaje {
+.personaje, .enemy{
   --height-character: 50px;
   --margin-character: -20% 0px 0px 0px;
   background-image: linear-gradient(to top right, var(--color-camino-bot), var(--color-camino-top));
 }
-
-.personaje:after {
-  background-image: url("personaje.png");
-  background-size: 90%;
+.personaje:after, .enemy:after{
   background-position: center;
   display: inline-block;
   background-repeat: no-repeat;
   margin: var(--margin-character);
-  width: 100%;
+  width: 90%;
   height: var(--height-character);
   content: "";
   z-index: 15;
   animation:  priority 1s infinite, saltar 0.5s steps(8);
+}
+.personaje:after {
+  background-image: url("personaje.png");
+  background-size: 90%;
+}
+.enemy:after{
+  background-image: url("monika.png");
+  background-size: 80%;
 }
 
 @keyframes saltar {
   50% {
     transform: translateY(-10px);
   }
-
   100% {
     transform: translateY(0px);
   }
 }
+
+/* Mantiene la prioridad de una imagen similar al z-index */
 @keyframes priority {
   100%{
     transform: scaleX(0.9999);
@@ -119,8 +125,8 @@
 }
 
 .llave{
-  --height-llave: 30px;
-  /* --margin-llave: 0px 0px 0px 0px; */
+  --height-item: 30px;
+  --margin-item: 0px 0px 0px 0px;
   background-color: var(--color-pared);
 }
 .llave:after{
@@ -130,8 +136,8 @@
   content: "";
   display: inline-block;
   background-repeat: no-repeat;
-  margin: var(--margin-llave);
-  height: var(--height-llave);
+  margin: var(--margin-item);
+  height: var(--height-item);
   width: 100%;
   animation-direction: normal;
   animation: girar 1s infinite steps(30), aparecer 1s steps(16);
@@ -152,6 +158,61 @@
   100%{
       transform: scaleX(1) scaleY(1);
   }
+}
+.book{
+  --height-item: 30px;
+  --margin-item: 0px 0px 0px 0px;
+  background-color: var(--color-pared);
+}
+.book:after{
+  background-position: center;
+  background-size: 100%;
+  background-image: url("book.gif");
+  content: "";
+  display: inline-block;
+  background-repeat: no-repeat;
+  height: var(--height-item);
+  width: 140%;
+  animation-direction: normal;
+  animation: priority 1s infinite, aparecer 1s steps(16);
+  z-index: 7;
+}
+.knife {
+  --height-item: 30px;
+  --margin-item: 0px 0px 0px 0px;
+  background-color: var(--color-pared);
+}
+.knife:after{
+  background-position: center;
+  background-size: 100%;
+  background-image: url("cuchi.png");
+  content: "";
+  display: inline-block;
+  background-repeat: no-repeat;
+  height: var(--height-item);
+  width: 140%;
+  animation-direction: normal;
+  animation: priority 1s infinite, aparecer 1s steps(16);
+  z-index: 7;
+}
+
+.nothing{
+  --height-item: 30px;
+  --margin-item: 0px 0px 0px 0px;
+  background-color: var(--color-pared);
+}
+.nothing:after{
+  background-position: center;
+  background-size: 100%;
+  background-image: url("nothing.png");
+  content: "";
+  display: inline-block;
+  background-repeat: no-repeat;
+  height: var(--height-item);
+  width: 100%;
+  animation-direction: normal;
+  animation: priority 1s infinite, aparecer 1s steps(16);
+  z-index: 7;
 }
 
 .camino {

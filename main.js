@@ -10,15 +10,20 @@ var arr_mapa = new Array(_FILAS);
 for (var i = 0; i < arr_mapa.length; i++) {
   arr_mapa[i] = new Array(_COL);
 }
+
+// Variables de control
 let hayLlave = false;
+let hayLibro = false;
+let hayCuchi = false;
 // 0 = pared
 // 1 = personaje
 // 2 = camino
 // 3 = camino pisado
 // 4 = pared con tesoro
+// 5 = Enemy
 // 6 = llave
-// 7 = urna
-// 8 = pergamino / espada
+// 7 = urna / libro
+// 8 = pergamino / knife
 // 9 = vacio /
 // S = Score
 // V = Vidas
@@ -43,7 +48,7 @@ console.log(arr_items);
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,5,0],
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
   ];
   // mapa [1][9];
@@ -67,11 +72,15 @@ console.log(arr_items);
           var node = document.createElement("div");
           if (element[i] == 0 || element[i] == 4) {node.classList.add("pared");}
           else if(element[i] == 2){node.classList.add("camino");}
-          else if(element[i] == 1){node.classList.add("personaje");}
           else if(element[i] == 3){node.classList.add("pisado");}
+          else if(element[i] == 6){node.classList.add("llave");}
+          else if(element[i] == 7){node.classList.add("book");}
+          else if(element[i] == 8){node.classList.add("knife");}
+          else if(element[i] == 9){node.classList.add("nothing");}
+          else if(element[i] == 1){node.classList.add("personaje");}
+          else if(element[i] == 5){node.classList.add("enemy");}
           else if(element[i] == 'S'){node.classList.add("score");}
           else if(element[i] == 'V'){node.classList.add("vidas");}
-          else if(element[i] == 6){node.classList.add("llave");}
           node.classList.add("casilla");
           mapa_div.appendChild(node);
         }
@@ -189,18 +198,17 @@ console.log(arr_items);
     }
     function revelarCaja(y,x) {
       mapaPisadas[y][x+1] = arr_items[premioActual];
-
       switch (arr_items[premioActual]) {
-        case 6:
-        arr_mapa[y][x+1].classList.add('llave');
+        case 6: arr_mapa[y][x+1].classList.add('llave');
         hayLlave = true;
-        console.log("llave revelada");
         break;
-        case 7: arr_mapa[y][x+1].classList.add('camino');
+        case 7: arr_mapa[y][x+1].classList.add('book');
+        hayLibro = true;
         break;
-        case 8: arr_mapa[y][x+1].classList.add('camino');
+        case 8: arr_mapa[y][x+1].classList.add('knife');
+        hayCuchi = true;
         break;
-        case 9: arr_mapa[y][x+1].classList.add('camino');
+        case 9: arr_mapa[y][x+1].classList.add('nothing');
         break;
         default:
         break;
@@ -228,7 +236,6 @@ console.log(arr_items);
     }
   }
 
-
   // Setteo las propiedades de las clases segun el tamaño de la ventana en el tag style del dom
   function resize() {
     style = document.getElementsByTagName('style')[0];
@@ -239,7 +246,7 @@ console.log(arr_items);
            "grid-template-columns: repeat("+_COL+","+(window.innerWidth/_COL)+"px)"+"}\n";
     // Character size
     style.innerHTML +=
-    ".personaje{--height-character: "+(window.innerHeight/_FILAS)*2.2+"px;\n"+
+    ".personaje, .enemy{--height-character: "+(window.innerHeight/_FILAS)*2.2+"px;\n"+
                "--margin-character: "+(-window.innerHeight/_FILAS)+"px 0px 0px 0px }\n";
     // Pisadas size
     style.innerHTML +=
@@ -247,14 +254,15 @@ console.log(arr_items);
             "--margin-pisado:"+(-(window.innerHeight/_FILAS)/1.5)+"px 0px 0px 0px;\n}\n";
     // Llaves size
     style.innerHTML +=
-    ".llave{ --height-llave:"+((window.innerHeight/_FILAS)*2)+"px;\n"
+    ".llave, .book, .knife, .nothing{ --height-item:"+((window.innerHeight/_FILAS)*2)+"px;\n"
+            "--margin-item:"+(window.innerHeight/_FILAS)/1.5+"px 0px 0px 0px;\n"
     "\n}";
   }
   // re-size en real time
   window.addEventListener('resize', function(){
     resize();
   });
-// Array para llevar que casillas se pisaron
+// Array para llevar que casillas se pisaron y que tesoros se revelaron
   var mapaPisadas = [
               [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
               [0,0,0,0,0, 0,0,0,0,3, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
@@ -273,24 +281,16 @@ console.log(arr_items);
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
   ];
-  // funcion para shuflear un array totalmente robada de por ahi
+  // funcion para shuflear un array
   function shuffle(array) {
     let counter = array.length;
-
-    // While there are elements in the array
     while (counter > 0) {
-        // Pick a random index
         let index = Math.floor(Math.random() * counter);
-
-        // Decrease counter by 1
         counter--;
-
-        // And swap the last element with it
         let temp = array[counter];
         array[counter] = array[index];
         array[index] = temp;
     }
-
     return array;
   }
 }
