@@ -5,7 +5,18 @@ const _FILAS =  16;
 let mapa_div = document.getElementById('mapa');
 let arr_mapa_div;
 
-//genero un array bi-dimensional para guardar todos los divs mas adelante
+let pasillosY = [5,8,11,14];
+let pasillosX = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
+let cantEnemigos = 4;
+let enemigos = [];
+
+//spawn ramdom de un enemigo
+// let enemyX = shuffle(pasillosX)[0];
+// let enemyY = shuffle(pasillosY)[0];
+
+
+
+// Genero un array bi-dimensional para guardar todos los divs del DOM
 var arr_mapa = new Array(_FILAS);
 for (var i = 0; i < arr_mapa.length; i++) {
   arr_mapa[i] = new Array(_COL);
@@ -15,6 +26,20 @@ for (var i = 0; i < arr_mapa.length; i++) {
 let hayLlave = false;
 let hayLibro = false;
 let hayCuchi = false;
+
+// Items de las cajas
+let arr_items = [6,7,8,9,9 ,9,9,9,9,9
+                ,9,9,9,9,9 ,9,9,9,9,9];
+shuffle(arr_items);
+let premioActual = 0;
+console.log(arr_items);
+
+// mapa [1][9];
+// Posicion inicial
+let personajeY = 1;
+let personajeX = 9;
+
+
 // 0 = pared
 // 1 = personaje
 // 2 = camino
@@ -27,11 +52,7 @@ let hayCuchi = false;
 // 9 = vacio /
 // S = Score
 // V = Vidas
-let arr_items = [6,7,8,9,9 ,9,9,9,9,9
-                ,9,9,9,9,9 ,9,9,9,9,9];
-shuffle(arr_items);
-let premioActual = 0;
-console.log(arr_items);
+
 // Mapa inicial
   var mapa = [
               [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
@@ -48,21 +69,34 @@ console.log(arr_items);
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,5,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
   ];
-  // mapa [1][9];
-  // Posicion inicial
-  let personajeX = 9;
-  let personajeY = 1;
 
 
 
 
+
+
+  spawnearEnemigos();
   mostrarMapa();
 
 
-  // Dibujar mapa
+// Genera enemigos en el mapa
+  function spawnearEnemigos() {
+    for (var i = 0; i < cantEnemigos; i++) {
+      enemigos[i] = {x:shuffle(pasillosX)[0],y:shuffle(pasillosY)[0],vivo:true};
+      for (var j = 0; j < i; j++) {
+        while(enemigos[j].x == enemigos[i].x && enemigos[j].y == enemigos[i].y) {
+          enemigos[i] = {x:shuffle(pasillosX)[0],y:shuffle(pasillosY)[0],vivo:true};
+        }
+      }
+      mapa[enemigos[i].y][enemigos[i].x] = 5;
+      console.log(enemigos[i]);
+    }
+  }
+
+// Dibuja el mapa en el DOM
   function  mostrarMapa(){
     //Borro el contenido del div padre
     mapa_div.innerHTML = "";
@@ -102,7 +136,7 @@ console.log(arr_items);
       resize();
     };
 
-    // Movimiento
+    // Movimiento del personaje
     // Se modifica el array interno y el DOM
     function mover(dirreccion) {
       if(dirreccion=="arriba"){

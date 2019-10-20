@@ -140,7 +140,7 @@
   height: var(--height-item);
   width: 100%;
   animation-direction: normal;
-  animation: girar 1s infinite steps(30), aparecer 1s steps(16);
+  animation: girar 1s infinite steps(30), aparecer 1s steps(24);
   z-index: 7;
 }
 @keyframes girar {
@@ -174,7 +174,7 @@
   height: var(--height-item);
   width: 140%;
   animation-direction: normal;
-  animation: priority 1s infinite, aparecer 1s steps(16);
+  animation: priority 1s infinite, aparecer 1s steps(24);
   z-index: 7;
 }
 .knife {
@@ -192,7 +192,7 @@
   height: var(--height-item);
   width: 140%;
   animation-direction: normal;
-  animation: priority 1s infinite, aparecer 1s steps(16);
+  animation: priority 1s infinite, aparecer 1s steps(24);
   z-index: 7;
 }
 
@@ -211,7 +211,7 @@
   height: var(--height-item);
   width: 100%;
   animation-direction: normal;
-  animation: priority 1s infinite, aparecer 1s steps(16);
+  animation: priority 1s infinite, aparecer 1s steps(24);
   z-index: 7;
 }
 
