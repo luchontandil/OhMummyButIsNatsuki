@@ -7,7 +7,7 @@ let arr_mapa_div;
 
 let pasillosY = [5,8,11,14];
 let pasillosX = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
-let cantEnemigos = 4;
+let cantEnemigos = 1;
 let enemigos = [];
 
 //spawn ramdom de un enemigo
@@ -72,7 +72,25 @@ let personajeX = 9;
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
   ];
-
+  // Array para llevar que casillas se pisaron y que tesoros se revelaron
+    var mapaPisadas = [
+              [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
+              [0,0,0,0,0, 0,0,0,0,3, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 6,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
+              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
+              [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
+    ];
 
 
 
@@ -80,6 +98,15 @@ let personajeX = 9;
 
   spawnearEnemigos();
   mostrarMapa();
+  setInterval(function() {
+    moverEnemigos();
+  }, 800);
+
+
+  // for (var i = 0; i < enemigos.length; i++) {
+  //     console.log("i= "+i +" X= "+enemigos[i].x+ " Y= "+ enemigos[i].y);
+  // }
+
 
 
 // Genera enemigos en el mapa
@@ -92,7 +119,95 @@ let personajeX = 9;
         }
       }
       mapa[enemigos[i].y][enemigos[i].x] = 5;
-      console.log(enemigos[i]);
+    }
+  }
+  // mover enemigos
+  function moverEnemigos() {
+    var movio;
+    for (var i = 0; i < enemigos.length; i++) {
+      movio = false;
+      // Arriba
+      if (enemigos[i].vivo) {
+        if(movio == false && enemigos[i].y > personajeY && mapa[enemigos[i].y-1][enemigos[i].x] != 4 && mapa[enemigos[i].y-1][enemigos[i].x] != 0 && mapa[enemigos[i].y-1][enemigos[i].x] != 5){
+          mapa[enemigos[i].y-1][enemigos[i].x] = 5;
+          arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove('enemy');
+          arr_mapa[enemigos[i].y-1][enemigos[i].x].classList.add('enemy');
+
+          if(mapaPisadas[enemigos[i].y-1][enemigos[i].x] == 3){
+               arr_mapa[enemigos[i].y-1][enemigos[i].x].classList.remove('pisado');}
+          else{arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove('camino');}
+
+          if (mapaPisadas[enemigos[i].y][enemigos[i].x] == 3) {
+            mapa[enemigos[i].y][enemigos[i].x] = 3;
+            arr_mapa[enemigos[i].y][enemigos[i].x].classList.add('pisado');}
+          else{
+            mapa[enemigos[i].y][enemigos[i].x] = 2;
+            arr_mapa[enemigos[i].y][enemigos[i].x].classList.add('camino');}
+
+          enemigos[i].y = enemigos[i].y-1;
+          movio = true;
+        }
+          // Abajo
+        if(movio == false && enemigos[i].y < personajeY && mapa[enemigos[i].y+1][enemigos[i].x] != 4 && mapa[enemigos[i].y+1][enemigos[i].x] != 0 && mapa[enemigos[i].y+1][enemigos[i].x] != 5){
+          mapa[enemigos[i].y+1][enemigos[i].x] = 5;
+          arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove('enemy');
+          arr_mapa[enemigos[i].y+1][enemigos[i].x].classList.add('enemy');
+
+          if(mapaPisadas[enemigos[i].y+1][enemigos[i].x] == 3){
+               arr_mapa[enemigos[i].y+1][enemigos[i].x].classList.remove('pisado');}
+          else{arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove('camino');}
+
+          if (mapaPisadas[enemigos[i].y][enemigos[i].x] == 3) {
+            mapa[enemigos[i].y][enemigos[i].x] = 3;
+            arr_mapa[enemigos[i].y][enemigos[i].x].classList.add('pisado');}
+          else{
+            mapa[enemigos[i].y][enemigos[i].x] = 2;
+            arr_mapa[enemigos[i].y][enemigos[i].x].classList.add('camino');}
+
+          enemigos[i].y = enemigos[i].y+1;
+          movio = true;
+        }
+          // Derecha
+        if(movio == false && enemigos[i].x < personajeX && mapa[enemigos[i].y][enemigos[i].x+1] != 4 && mapa[enemigos[i].y][enemigos[i].x+1] != 0 && mapa[enemigos[i].y][enemigos[i].x+1] != 5){
+          mapa[enemigos[i].y][enemigos[i].x+1] = 5;
+          arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove('enemy');
+          arr_mapa[enemigos[i].y][enemigos[i].x+1].classList.add('enemy');
+
+          if(mapaPisadas[enemigos[i].y][enemigos[i].x+1] == 3){
+               arr_mapa[enemigos[i].y][enemigos[i].x+1].classList.remove('pisado');}
+          else{arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove('camino');}
+
+          if (mapaPisadas[enemigos[i].y][enemigos[i].x] == 3) {
+            mapa[enemigos[i].y][enemigos[i].x] = 3;
+            arr_mapa[enemigos[i].y][enemigos[i].x].classList.add('pisado');}
+          else{
+            mapa[enemigos[i].y][enemigos[i].x] = 2;
+            arr_mapa[enemigos[i].y][enemigos[i].x].classList.add('camino');}
+
+          enemigos[i].x = enemigos[i].x+1;
+          movio = true;
+        }
+          // Izquierda
+        if(movio == false && enemigos[i].x > personajeX && mapa[enemigos[i].y][enemigos[i].x-1] != 4 && mapa[enemigos[i].y][enemigos[i].x-1] != 0 && mapa[enemigos[i].y][enemigos[i].x-1] != 5){
+          mapa[enemigos[i].y][enemigos[i].x-1] = 5;
+          arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove('enemy');
+          arr_mapa[enemigos[i].y][enemigos[i].x-1].classList.add('enemy');
+
+          if(mapaPisadas[enemigos[i].y][enemigos[i].x-1] == 3){
+               arr_mapa[enemigos[i].y][enemigos[i].x-1].classList.remove('pisado');}
+          else{arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove('camino');}
+
+          if (mapaPisadas[enemigos[i].y][enemigos[i].x] == 3) {
+            mapa[enemigos[i].y][enemigos[i].x] = 3;
+            arr_mapa[enemigos[i].y][enemigos[i].x].classList.add('pisado');}
+          else{
+            mapa[enemigos[i].y][enemigos[i].x] = 2;
+            arr_mapa[enemigos[i].y][enemigos[i].x].classList.add('camino');}
+
+          enemigos[i].x = enemigos[i].x-1;
+          movio = true;
+        }
+      }
     }
   }
 
@@ -296,25 +411,7 @@ let personajeX = 9;
   window.addEventListener('resize', function(){
     resize();
   });
-// Array para llevar que casillas se pisaron y que tesoros se revelaron
-  var mapaPisadas = [
-              [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
-              [0,0,0,0,0, 0,0,0,0,3, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
-              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 6,4,2,4,4, 4,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
-              [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
-              [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
-  ];
+
   // funcion para shuflear un array
   function shuffle(array) {
     let counter = array.length;
