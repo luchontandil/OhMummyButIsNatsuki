@@ -15,7 +15,6 @@ let enemigos = [];
 // let enemyY = shuffle(pasillosY)[0];
 
 
-
 // Genero un array bi-dimensional para guardar todos los divs del DOM
 var arr_mapa = new Array(_FILAS);
 for (var i = 0; i < arr_mapa.length; i++) {
@@ -28,7 +27,7 @@ let hayLibro = false;
 let hayCuchi = false;
 
 // Items de las cajas
-let arr_items = [6,7,8,9,9 ,9,9,9,9,9
+let arr_items = [6,7,8,5,9 ,9,9,9,9,9
                 ,9,9,9,9,9 ,9,9,9,9,9];
 shuffle(arr_items);
 let premioActual = 0;
@@ -103,12 +102,6 @@ let personajeX = 9;
   }, 800);
 
 
-  // for (var i = 0; i < enemigos.length; i++) {
-  //     console.log("i= "+i +" X= "+enemigos[i].x+ " Y= "+ enemigos[i].y);
-  // }
-
-
-
 // Genera enemigos en el mapa
   function spawnearEnemigos() {
     for (var i = 0; i < cantEnemigos; i++) {
@@ -121,6 +114,7 @@ let personajeX = 9;
       mapa[enemigos[i].y][enemigos[i].x] = 5;
     }
   }
+
   // mover enemigos
   function moverEnemigos() {
     var movio;
@@ -249,7 +243,7 @@ let personajeX = 9;
         fila++;
       }
       resize();
-    };
+    }
 
     // Movimiento del personaje
     // Se modifica el array interno y el DOM
@@ -348,6 +342,8 @@ let personajeX = 9;
     function revelarCaja(y,x) {
       mapaPisadas[y][x+1] = arr_items[premioActual];
       switch (arr_items[premioActual]) {
+        case 9: arr_mapa[y][x+1].classList.add('nothing');
+        break;
         case 6: arr_mapa[y][x+1].classList.add('llave');
         hayLlave = true;
         break;
@@ -357,7 +353,13 @@ let personajeX = 9;
         case 8: arr_mapa[y][x+1].classList.add('knife');
         hayCuchi = true;
         break;
-        case 9: arr_mapa[y][x+1].classList.add('nothing');
+        case 5: mapa[y+2][x+3] = 5; 
+        mapa_div[y+1][x+2].classList.add("spawn");
+        setTimeout(function(){
+          arr_mapa[y+1][x+2].classList.remove("spawn");
+          enemigos[cantEnemigos] = {x:x+3,y:y+2,vivo:true};
+        }, 1000);
+        
         break;
         default:
         break;

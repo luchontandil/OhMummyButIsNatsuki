@@ -159,6 +159,20 @@
       transform: scaleX(1) scaleY(1);
   }
 }
+.spawn{
+  animation: spawn 1s linear;
+}
+@keyframes spawn {
+  0%{
+    transform: scaleY(1.0);
+  }
+  50%{
+    transform: scaleY(0.0);
+  }
+  100%{
+    transform: scaleY(1.0);
+  }
+}
 .book{
   --height-item: 30px;
   --margin-item: 0px 0px 0px 0px;
