@@ -205,95 +205,76 @@ let personajeX = 9;
     }
   }
 
-// Dibuja el mapa en el DOM
-  function  mostrarMapa(){
-    //Borro el contenido del div padre
-    mapa_div.innerHTML = "";
-    //Genero el mapa a partir de "mapa"
-      mapa.forEach(function(element){
-        for (var i = 0; i < element.length; i++) {
-          var node = document.createElement("div");
-          if (element[i] == 0 || element[i] == 4) {node.classList.add("pared");}
-          else if(element[i] == 2){node.classList.add("camino");}
-          else if(element[i] == 3){node.classList.add("pisado");}
-          else if(element[i] == 6){node.classList.add("llave");}
-          else if(element[i] == 7){node.classList.add("book");}
-          else if(element[i] == 8){node.classList.add("knife");}
-          else if(element[i] == 9){node.classList.add("nothing");}
-          else if(element[i] == 1){node.classList.add("personaje");}
-          else if(element[i] == 5){node.classList.add("enemy");}
-          else if(element[i] == 'S'){node.classList.add("score");}
-          else if(element[i] == 'V'){node.classList.add("vidas");}
-          node.classList.add("casilla");
-          mapa_div.appendChild(node);
-        }
-      });
-      // Capturo todos los divs y los guardo en un array
-      arr_mapa_div = mapa_div.getElementsByClassName('casilla');
-      var fila=0;
-      var index=0;
-      for (var i = 0; i < arr_mapa_div.length; i+=(_COL)) {
-        j=i;
-        index=0;
-        while(index<(_COL)){
-          arr_mapa[fila][index] = arr_mapa_div[j];
-          j++;
-          index++;
-        }
-        fila++;
-      }
-      resize();
+  // Movimiento del personaje
+  // Se modifica el array interno y el DOM
+  function mover(dirreccion) {
+    function canMove(y, x) {
+      const cellValue = mapa[y][x]
+      return cellValue != 0 && cellValue != 4
     }
 
-    // Movimiento del personaje
-    // Se modifica el array interno y el DOM
-    function mover(dirreccion) {
-      if(dirreccion=="arriba"){
-        if(mapa[personajeY-1][personajeX] != 0 && mapa[personajeY-1][personajeX] != 4 && mapa[personajeY-1][personajeX] != 6){
-          mapaPisadas[personajeY-1][personajeX]   = 3;
-          mapa[personajeY-1][personajeX] = 1;
-          arr_mapa[personajeY][personajeX].classList.remove('personaje');
-          arr_mapa[personajeY][personajeX].classList.add('pisado');
-          arr_mapa[personajeY-1][personajeX].classList.add('personaje');
-          arr_mapa[personajeY-1][personajeX].classList.remove('pisado');
-          personajeY--;
-        }
-      }
-      else if(dirreccion=="abajo"){
-        if(mapa[personajeY+1][personajeX] != 0 && mapa[personajeY+1][personajeX] != 4 && mapa[personajeY+1][personajeX] != 6){
-          mapaPisadas[personajeY+1][personajeX]   = 3;
-          mapa[personajeY+1][personajeX] = 1;
-          arr_mapa[personajeY][personajeX].classList.remove('personaje');
-          arr_mapa[personajeY][personajeX].classList.add('pisado');
-          arr_mapa[personajeY+1][personajeX].classList.add('personaje');
-          arr_mapa[personajeY+1][personajeX].classList.remove('pisado');
-          personajeY++;
-        }
-      }
-      else if(dirreccion=="der"){
-        if(mapa[personajeY][personajeX+1] != 0 && mapa[personajeY][personajeX+1] != 4 && mapa[personajeY][personajeX+1] != 6){
-          mapaPisadas[personajeY][personajeX+1]   = 3;
-          mapa[personajeY][personajeX+1] = 1;
-          arr_mapa[personajeY][personajeX].classList.remove('personaje');
-          arr_mapa[personajeY][personajeX].classList.add('pisado');
-          arr_mapa[personajeY][personajeX+1].classList.add('personaje');
-          arr_mapa[personajeY][personajeX+1].classList.remove('pisado');
-          personajeX++;
-        }
-      }
-      else if(dirreccion=="izq"){
-        if(mapa[personajeY][personajeX-1] != 0 && mapa[personajeY][personajeX-1] != 4 && mapa[personajeY][personajeX-1] != 6){
-          mapaPisadas[personajeY][personajeX-1]   = 3;
-          mapa[personajeY][personajeX-1] = 1;
-          arr_mapa[personajeY][personajeX].classList.remove('personaje');
-          arr_mapa[personajeY][personajeX].classList.add('pisado');
-          arr_mapa[personajeY][personajeX-1].classList.add('personaje');
-          arr_mapa[personajeY][personajeX-1].classList.remove('pisado');
-          personajeX--;
-        }
-      }
-      checkCajas();
+    arr_mapa[personajeY][personajeX].classList.remove('personaje');
+    arr_mapa[personajeY][personajeX].classList.add('pisado');
+
+    if(dirreccion=="arriba"){
+      if(canMove(personajeY-1, personajeX)) personajeY--
     }
+    if(dirreccion=="abajo"){
+      if(canMove(personajeY+1, personajeX)) personajeY++
+    }
+    if(dirreccion=="der"){
+      if(canMove(personajeY, personajeX+1)) personajeX++
+    }
+    if(dirreccion=="izq"){
+      if(canMove(personajeY, personajeX-1)) personajeX--
+    }
+    mapaPisadas[personajeY][personajeX] = 3; //setMapPisadas(y,x, CODE)
+    mapa[personajeY][personajeX] = 1;   //setMap(y,x, CODE)
+    arr_mapa[personajeY][personajeX].classList.add('personaje'); // addClassToArrMap(y,x, class)
+    arr_mapa[personajeY][personajeX].classList.remove('pisado');  // removeClassFromArrMap(y,x, class)
+
+    checkCajas();
+  }
+
+    // Dibuja el mapa en el DOM
+      function  mostrarMapa(){
+        //Borro el contenido del div padre
+        mapa_div.innerHTML = "";
+        //Genero el mapa a partir de "mapa"
+          mapa.forEach(function(element){
+            for (var i = 0; i < element.length; i++) {
+              var node = document.createElement("div");
+              if (element[i] == 0 || element[i] == 4) {node.classList.add("pared");}
+              else if(element[i] == 2){node.classList.add("camino");}
+              else if(element[i] == 3){node.classList.add("pisado");}
+              else if(element[i] == 6){node.classList.add("llave");}
+              else if(element[i] == 7){node.classList.add("book");}
+              else if(element[i] == 8){node.classList.add("knife");}
+              else if(element[i] == 9){node.classList.add("nothing");}
+              else if(element[i] == 1){node.classList.add("personaje");}
+              else if(element[i] == 5){node.classList.add("enemy");}
+              else if(element[i] == 'S'){node.classList.add("score");}
+              else if(element[i] == 'V'){node.classList.add("vidas");}
+              node.classList.add("casilla");
+              mapa_div.appendChild(node);
+            }
+          });
+          // Capturo todos los divs y los guardo en un array
+          arr_mapa_div = mapa_div.getElementsByClassName('casilla');
+          var fila=0;
+          var index=0;
+          for (var i = 0; i < arr_mapa_div.length; i+=(_COL)) {
+            j=i;
+            index=0;
+            while(index<(_COL)){
+              arr_mapa[fila][index] = arr_mapa_div[j];
+              j++;
+              index++;
+            }
+            fila++;
+          }
+          resize();
+        }
     // Ver caja por caja si esta pintada o no, si no ejecutar mirarAlrededor()
     function checkCajas() {
       if(mapaPisadas[3][2+1]!= true)mirarAlrededor(3,2);
@@ -353,13 +334,13 @@ let personajeX = 9;
         case 8: arr_mapa[y][x+1].classList.add('knife');
         hayCuchi = true;
         break;
-        case 5: mapa[y+2][x+3] = 5; 
-        mapa_div[y+1][x+2].classList.add("spawn");
-        setTimeout(function(){
-          arr_mapa[y+1][x+2].classList.remove("spawn");
-          enemigos[cantEnemigos] = {x:x+3,y:y+2,vivo:true};
-        }, 1000);
-        
+        // case 5: mapa[y+2][x+3] = 5;
+        // mapa_div[y+1][x+2].classList.add("spawn");
+        // setTimeout(function(){
+        //   arr_mapa[y+1][x+2].classList.remove("spawn");
+        //   enemigos[cantEnemigos] = {x:x+3,y:y+2,vivo:true};
+        // }, 1000);
+
         break;
         default:
         break;
