@@ -7,7 +7,7 @@ let arr_mapa_div;
 
 let pasillosY = [5,8,11,14];
 let pasillosX = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
-let cantEnemigos = 1;
+let cantEnemigos = 2;
 let enemigos = [];
 
 //spawn ramdom de un enemigo
@@ -25,18 +25,24 @@ for (var i = 0; i < arr_mapa.length; i++) {
 let hayLlave = false;
 let hayLibro = false;
 let hayCuchi = false;
+let vidas = 5;
+let firstMove = true;
+
+// let vidas = getComputedStyle(mapa_div.getElementsByClassName("vidas")[0]).getPropertyValue('--vidas');
 
 // Items de las cajas
-let arr_items = [6,7,8,5,9 ,9,9,9,9,9
+let arr_items = [5,7,8,6,9 ,9,9,9,9,9
                 ,9,9,9,9,9 ,9,9,9,9,9];
-shuffle(arr_items);
+// shuffle(arr_items);
 let premioActual = 0;
 console.log(arr_items);
 
 // mapa [1][9];
+let xInicial = 9;
+let yInicial = 1;
 // Posicion inicial
-let personajeY = 1;
-let personajeX = 9;
+let personajeY = yInicial;
+let personajeX = xInicial;
 
 
 // 0 = pared
@@ -48,13 +54,15 @@ let personajeX = 9;
 // 6 = llave
 // 7 = urna / libro
 // 8 = pergamino / knife
-// 9 = vacio /
+// 9 = nothing
+// 10 = puerta cerrada
+// 11 = puerta abierta
 // S = Score
 // V = Vidas
 
 // Mapa inicial
   var mapa = [
-              [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
+              [0,'S',0,0,0, 'L',0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
               [0,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
@@ -73,8 +81,8 @@ let personajeX = 9;
   ];
   // Array para llevar que casillas se pisaron y que tesoros se revelaron
     var mapaPisadas = [
-              [0,'S',0,0,0, 0,0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
-              [0,0,0,0,0, 0,0,0,0,3, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
+              [0,'S',0,0,0, 'L',0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
+              [0,0,0,0,0, 0,0,0,0,2, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 6,4,2,4,4, 4,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
@@ -91,16 +99,18 @@ let personajeX = 9;
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
     ];
 
-
-
-
-
   spawnearEnemigos();
   mostrarMapa();
+  setVidas(vidas);
   setInterval(function() {
     moverEnemigos();
   }, 800);
 
+
+
+  function setVidas(value) {
+    mapa_div.getElementsByClassName("vidas")[0].style.setProperty('--vidas',"'"+value+"'");
+  }
 
 // Genera enemigos en el mapa
   function spawnearEnemigos() {
@@ -116,6 +126,7 @@ let personajeX = 9;
   }
 
   // mover enemigos
+  //TODO: reescribir esta basura
   function moverEnemigos() {
     var movio;
     for (var i = 0; i < enemigos.length; i++) {
@@ -201,6 +212,19 @@ let personajeX = 9;
           enemigos[i].x = enemigos[i].x-1;
           movio = true;
         }
+        // colision con el personaje
+        if(enemigos[i].x == personajeX && enemigos[i].y == personajeY){
+          enemigos[i].vivo = false;
+          mapa[enemigos[i].y][enemigos[i].x] = 1;
+          arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove("enemy");
+          if (hayCuchi) {
+            hayCuchi = false;
+          }
+          else{
+            vidas--;
+            setVidas(vidas);
+          }
+        }
       }
     }
   }
@@ -210,7 +234,7 @@ let personajeX = 9;
   function mover(dirreccion) {
     function canMove(y, x) {
       const cellValue = mapa[y][x]
-      return cellValue != 0 && cellValue != 4
+      return cellValue != 0 && cellValue != 4 && cellValue != 10
     }
 
     arr_mapa[personajeY][personajeX].classList.remove('personaje');
@@ -221,6 +245,12 @@ let personajeX = 9;
     }
     if(dirreccion=="abajo"){
       if(canMove(personajeY+1, personajeX)) personajeY++
+      if (firstMove) {
+        firstMove = false;
+        arr_mapa[yInicial][xInicial].classList.remove('pisado');
+        arr_mapa[yInicial][xInicial].classList.add("cerrarPuerta");
+        mapa[yInicial][xInicial] = 10;
+      }
     }
     if(dirreccion=="der"){
       if(canMove(personajeY, personajeX+1)) personajeX++
@@ -228,13 +258,34 @@ let personajeX = 9;
     if(dirreccion=="izq"){
       if(canMove(personajeY, personajeX-1)) personajeX--
     }
+    for (var i = 0; i < enemigos.length; i++) {
+      if(enemigos[i].vivo){
+        if(enemigos[i].x == personajeX && enemigos[i].y == personajeY){
+          enemigos[i].vivo = false;
+          arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove("enemy");
+
+          if (hayCuchi) {
+            hayCuchi = false;
+          }
+          else{
+            vidas--;
+            setVidas(vidas);
+          }
+        }
+      }
+    }
     mapaPisadas[personajeY][personajeX] = 3; //setMapPisadas(y,x, CODE)
     mapa[personajeY][personajeX] = 1;   //setMap(y,x, CODE)
     arr_mapa[personajeY][personajeX].classList.add('personaje'); // addClassToArrMap(y,x, class)
     arr_mapa[personajeY][personajeX].classList.remove('pisado');  // removeClassFromArrMap(y,x, class)
-
     checkCajas();
+    if(puedeSalir && personajeY == yInicial && personajeX == xInicial){
+      pasarDeNivel();
+    }
   }
+function pasarDeNivel() {
+  //TODO
+}
 
     // Dibuja el mapa en el DOM
       function  mostrarMapa(){
@@ -255,6 +306,10 @@ let personajeX = 9;
               else if(element[i] == 5){node.classList.add("enemy");}
               else if(element[i] == 'S'){node.classList.add("score");}
               else if(element[i] == 'V'){node.classList.add("vidas");}
+              else if(element[i] == 'L'){node.classList.add("level");}
+              else if(element[i] == 10){node.classList.add("cerrarPuerta");}
+              else if(element[i] == 11){node.classList.add("abrirPuerta");}
+
               node.classList.add("casilla");
               mapa_div.appendChild(node);
             }
@@ -320,6 +375,17 @@ let personajeX = 9;
         mapaPisadas[y][x+1] = true;
       }
     }
+
+    function abrirPuerta() {
+      arr_mapa[yInicial][xInicial].classList.remove("cerrarPuerta");
+      arr_mapa[yInicial][xInicial].classList.add("abrirPuerta");
+      setTimeout(function(){
+        arr_mapa[yInicial][xInicial].classList.add("puertaAbierta");
+        arr_mapa[yInicial][xInicial].classList.remove("abrirPuerta");
+      }, 1000);
+      mapa[yInicial][xInicial] = 11;
+      puedeSalir = true;
+    }
     function revelarCaja(y,x) {
       mapaPisadas[y][x+1] = arr_items[premioActual];
       switch (arr_items[premioActual]) {
@@ -327,20 +393,25 @@ let personajeX = 9;
         break;
         case 6: arr_mapa[y][x+1].classList.add('llave');
         hayLlave = true;
+        if (hayLibro) abrirPuerta()
         break;
         case 7: arr_mapa[y][x+1].classList.add('book');
         hayLibro = true;
+        if (hayLlave) abrirPuerta()
         break;
         case 8: arr_mapa[y][x+1].classList.add('knife');
         hayCuchi = true;
         break;
-        // case 5: mapa[y+2][x+3] = 5;
-        // mapa_div[y+1][x+2].classList.add("spawn");
-        // setTimeout(function(){
-        //   arr_mapa[y+1][x+2].classList.remove("spawn");
-        //   enemigos[cantEnemigos] = {x:x+3,y:y+2,vivo:true};
-        // }, 1000);
-
+        case 5:
+            arr_mapa[y+1][x+2].classList.add("spawn");
+            arr_mapa[y+1][x+2].classList.remove("pared");
+            setTimeout(function(){
+              mapa[y+2][x+3] = 5;
+              enemigos[cantEnemigos] = {x:x+3,y:y+2,vivo:true};
+            }, 1000);
+            setTimeout(function() {
+              // arr_mapa[y+1][x+2].classList.remove("spawn");
+            },2000);
         break;
         default:
         break;
@@ -366,6 +437,7 @@ let personajeX = 9;
     else if (e.which == 87) {
       mover("arriba");
     }
+
   }
 
   // Setteo las propiedades de las clases segun el tamaño de la ventana en el tag style del dom
@@ -386,9 +458,14 @@ let personajeX = 9;
             "--margin-pisado:"+(-(window.innerHeight/_FILAS)/1.5)+"px 0px 0px 0px;\n}\n";
     // Llaves size
     style.innerHTML +=
-    ".llave, .book, .knife, .nothing{ --height-item:"+((window.innerHeight/_FILAS)*2)+"px;\n"
-            "--margin-item:"+(window.innerHeight/_FILAS)/1.5+"px 0px 0px 0px;\n"
-    "\n}";
+    ".llave, .book, .knife, .nothing{ --height-item:"+((window.innerHeight/_FILAS)*2)+"px;\n"+
+            "--margin-item: "+((window.innerHeight/_FILAS)/1.5)+"px 0px 0px 0px;}\n";
+    // Llaves size
+    style.innerHTML +=
+    ".cerrarPuerta, .abrirPuerta, .spawn, .puertaAbierta{ --height: "+(window.innerHeight/_FILAS)+"px;}\n";
+    //puerta abierta
+    style.innerHTML +=
+    ".puertaAbierta{background-image: linear-gradient(to top, grey, black);}";
   }
   // re-size en real time
   window.addEventListener('resize', function(){

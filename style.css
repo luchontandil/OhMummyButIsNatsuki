@@ -23,9 +23,25 @@
   grid-row-gap: 0px;
 }
 
+.level {
+  --level: "1";
+  --level-text: "Level::";
+  background-color: var(--color-pared);
+  background-size: 100%;
+  color: pink;
+  z-index: 2;
+}
+
+.level:after {
+  font-size: 28px;
+  content: var(--level-text)var(--level);
+  overflow-x: visible;
+  display: block;
+}
+
 .score {
-  --score:"0000000";
-  --score-text:"Score::";
+  --score: "0000000";
+  --score-text: "Score::";
   background-color: var(--color-pared);
   background-size: 100%;
   color: pink;
@@ -40,8 +56,8 @@
 }
 
 .vidas {
-  --vidas : "5";
-  --vidas-text:"Lifes::";
+  --vidas: "5";
+  --vidas-text: "Lifes::";
   background-color: var(--color-pared);
   background-size: 100%;
   overflow-x: visible;
@@ -54,12 +70,13 @@
   content: var(--vidas-text)var(--vidas);
 }
 
-.personaje, .enemy{
+.personaje, .enemy {
   --height-character: 50px;
   --margin-character: -20% 0px 0px 0px;
   background-image: linear-gradient(to top right, var(--color-camino-bot), var(--color-camino-top));
 }
-.personaje:after, .enemy:after{
+
+.personaje:after, .enemy:after {
   background-position: center;
   display: inline-block;
   background-repeat: no-repeat;
@@ -68,21 +85,41 @@
   height: var(--height-character);
   content: "";
   z-index: 15;
-  animation:  priority 1s infinite, saltar 0.5s steps(8);
 }
+
 .personaje:after {
   background-image: url("personaje.png");
   background-size: 90%;
+  animation: priority 1s infinite, salto2 0.5s steps(8);
 }
-.enemy:after{
+
+.enemy:after {
   background-image: url("monika.png");
   background-size: 80%;
+  animation: priority 1s infinite, saltar 0.5s steps(8);
+}
+
+@keyframes salto2 {
+  0% {
+    background-image: url("jump.png");
+  }
+
+  50% {
+    transform: translateY(-10px);
+    background-image: url("jump.png");
+  }
+
+  100% {
+    transform: translateY(0px);
+    background-image: url("jump.png");
+  }
 }
 
 @keyframes saltar {
   50% {
     transform: translateY(-10px);
   }
+
   100% {
     transform: translateY(0px);
   }
@@ -90,7 +127,7 @@
 
 /* Mantiene la prioridad de una imagen similar al z-index */
 @keyframes priority {
-  100%{
+  100% {
     transform: scaleX(0.9999);
   }
 }
@@ -116,69 +153,97 @@
 }
 
 @keyframes subir {
-  50%{
+  50% {
     transform: translateY(-5px);
   }
+
   100% {
-      transform: translateY(0px);
+    transform: translateY(0px);
   }
 }
 
-.llave{
+.llave {
   --height-item: 30px;
   --margin-item: 0px 0px 0px 0px;
   background-color: var(--color-pared);
 }
-.llave:after{
+
+.llave:after {
   background-position: center;
   background-size: 100%;
   background-image: url("llave2.png");
   content: "";
   display: inline-block;
   background-repeat: no-repeat;
-  margin: var(--margin-item);
   height: var(--height-item);
   width: 100%;
   animation-direction: normal;
   animation: girar 1s infinite steps(30), aparecer 1s steps(24);
   z-index: 7;
 }
+
 @keyframes girar {
-  100%{
+  100% {
     transform: rotateY(360deg);
   }
 }
+
 @keyframes aparecer {
-  0%{
+  0% {
     transform: scaleX(0.2) scaleY(0.2);
   }
-  80%{
+
+  80% {
     transform: scaleX(1.2) scaleY(1.2);
   }
-  100%{
-      transform: scaleX(1) scaleY(1);
+
+  100% {
+    transform: scaleX(1) scaleY(1);
   }
 }
-.spawn{
-  animation: spawn 1s linear;
+
+
+.spawn {
+  --height: 10px;
+  background-image: linear-gradient(to top, grey, black);
 }
+.spawn:after {
+  background-position: center;
+  display: inline-block;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: var(--height);
+  content: "";
+  z-index: 16;
+  background-image: url("door.png");
+  background-size: 100%;
+  animation: spawn 2s linear;
+}
+
 @keyframes spawn {
-  0%{
-    transform: scaleY(1.0);
+  0% {
+    -webkit-transform: perspective(1000px) rotateY(0deg);
+    -webkit-transform-origin: 0% 100%;
   }
-  50%{
-    transform: scaleY(0.0);
+
+  50% {
+    -webkit-transform: perspective(1000px) rotateY(90deg);
+    -webkit-transform-origin: 0% 100%;
   }
-  100%{
-    transform: scaleY(1.0);
+
+  100% {
+    -webkit-transform: perspective(1000px) rotateY(0deg);
+    -webkit-transform-origin: 0% 100%;
   }
 }
-.book{
+
+.book {
   --height-item: 30px;
   --margin-item: 0px 0px 0px 0px;
   background-color: var(--color-pared);
 }
-.book:after{
+
+.book:after {
   background-position: center;
   background-size: 100%;
   background-image: url("book.gif");
@@ -191,12 +256,14 @@
   animation: priority 1s infinite, aparecer 1s steps(24);
   z-index: 7;
 }
+
 .knife {
   --height-item: 30px;
   --margin-item: 0px 0px 0px 0px;
   background-color: var(--color-pared);
 }
-.knife:after{
+
+.knife:after {
   background-position: center;
   background-size: 100%;
   background-image: url("cuchi.png");
@@ -210,12 +277,13 @@
   z-index: 7;
 }
 
-.nothing{
+.nothing {
   --height-item: 30px;
   --margin-item: 0px 0px 0px 0px;
   background-color: var(--color-pared);
 }
-.nothing:after{
+
+.nothing:after {
   background-position: center;
   background-size: 100%;
   background-image: url("nothing.png");
@@ -229,6 +297,56 @@
   z-index: 7;
 }
 
+
+.cerrarPuerta, .abrirPuerta{
+  --height: 10px;
+  background-image: linear-gradient(to top, grey, black);
+}
+
+.cerrarPuerta:after, .abrirPuerta:after{
+  background-position: center;
+  display: inline-block;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: var(--height);
+  content: "";
+  z-index: 16;
+  background-image: url("door.png");
+  background-size: 100%;
+}
+
+.cerrarPuerta:after {
+  animation: cerrar 1s linear;
+}
+
+@keyframes cerrar {
+  0% {
+    -webkit-transform: perspective(1000px) rotateY(-90deg);
+    -webkit-transform-origin: 0% 100%;
+  }
+
+  100% {
+    -webkit-transform: perspective(1000px) rotateY(0deg);
+    -webkit-transform-origin: 0% 100%;
+  }
+}
+
+.abrirPuerta:after {
+  animation: abrir 1s linear;
+}
+
+@keyframes abrir {
+  0% {
+    -webkit-transform: perspective(1000px) rotateY(0deg);
+    -webkit-transform-origin: 0% 100%;
+  }
+
+  100% {
+    transform: perspective(1000px) rotateY(90deg);
+    -webkit-transform-origin: 0% 100%;
+  }
+}
+
 .camino {
   background-image: linear-gradient(to top right, var(--color-camino-bot), var(--color-camino-top));
 }
@@ -238,6 +356,7 @@
 }
 
 body {
+  background-color: var(--color-camino-bot);
   height: 100%;
   margin: 0;
   padding: 0;
