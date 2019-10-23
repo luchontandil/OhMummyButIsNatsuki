@@ -7,7 +7,7 @@ let arr_mapa_div;
 
 let pasillosY = [5,8,11,14];
 let pasillosX = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
-let cantEnemigos = 2;
+let cantEnemigos = 1;
 let enemigos = [];
 
 //spawn ramdom de un enemigo
@@ -27,6 +27,7 @@ let hayLibro = false;
 let hayCuchi = false;
 let vidas = 5;
 let firstMove = true;
+let nivel = 1;
 
 // let vidas = getComputedStyle(mapa_div.getElementsByClassName("vidas")[0]).getPropertyValue('--vidas');
 
@@ -61,8 +62,8 @@ let personajeX = xInicial;
 // V = Vidas
 
 // Mapa inicial
-  var mapa = [
-              [0,'S',0,0,0, 'L',0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
+  let mapa = [
+              [0,'S',0,0,0, 'L',0,0,0,0, 0,0,'V',0,0, 0,0,0,0,0, 0,0,0],
               [0,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 4,4,2,4,4, 4,2,0],
@@ -80,8 +81,8 @@ let personajeX = xInicial;
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
   ];
   // Array para llevar que casillas se pisaron y que tesoros se revelaron
-    var mapaPisadas = [
-              [0,'S',0,0,0, 'L',0,0,0,0, 0,0,0,0,'V', 0,0,0,0,0, 0,0,0],
+    let mapaPisadas = [
+              [0,'S',0,0,0, 'L',0,0,0,0, 0,0,'V',0,0, 0,0,0,0,0, 0,0,0],
               [0,0,0,0,0, 0,0,0,0,2, 0,0,0,0,0, 0,0,0,0,0, 0,0,0],
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,2,4,4,4, 2,4,4,4,2, 4,4,4,2,4, 6,4,2,4,4, 4,2,0],
@@ -98,20 +99,51 @@ let personajeX = xInicial;
               [0,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,0],
               [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0]
     ];
+  // Clon de los arrays para el siguiente nivel
+  let clonMapa = JSON.parse(JSON.stringify(mapa));
+  let clonMapaPisadas = JSON.parse(JSON.stringify(mapaPisadas));
+
 
   spawnearEnemigos();
   mostrarMapa();
-  setVidas(vidas);
-  setInterval(function() {
+
+  var moveEnemies = setInterval(function() {
     moverEnemigos();
   }, 800);
-
 
 
   function setVidas(value) {
     mapa_div.getElementsByClassName("vidas")[0].style.setProperty('--vidas',"'"+value+"'");
   }
+  function setNivel(value) {
+    mapa_div.getElementsByClassName("level")[0].style.setProperty('--level',"'"+value+"'");
+  }
 
+  function pasarDeNivel() {
+    clearInterval(moveEnemies);
+    nivel++;
+    restoreMaps();
+    mostrarMapa();
+    setNivel(nivel);
+    setVidas(vidas);
+    cantEnemigos++;
+    hayLlave = false;
+    hayLibro = false;
+    hayCuchi = false;
+    firstMove = true;
+    premioActual = 0;
+    shuffle(arr_items);
+    personajeY = yInicial;
+    personajeX = xInicial;
+    spawnearEnemigos();
+    moveEnemies = setInterval(function() {
+     moverEnemigos();
+    }, 800);
+  }
+  function restoreMaps() {
+    mapa = JSON.parse(JSON.stringify(clonMapa));
+    mapaPisadas = JSON.parse(JSON.stringify(clonMapaPisadas));
+  }
 // Genera enemigos en el mapa
   function spawnearEnemigos() {
     for (var i = 0; i < cantEnemigos; i++) {
@@ -214,6 +246,7 @@ let personajeX = xInicial;
         }
         // colision con el personaje
         if(enemigos[i].x == personajeX && enemigos[i].y == personajeY){
+          cantEnemigos--;
           enemigos[i].vivo = false;
           mapa[enemigos[i].y][enemigos[i].x] = 1;
           arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove("enemy");
@@ -263,7 +296,7 @@ let personajeX = xInicial;
         if(enemigos[i].x == personajeX && enemigos[i].y == personajeY){
           enemigos[i].vivo = false;
           arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove("enemy");
-
+          cantEnemigos--;
           if (hayCuchi) {
             hayCuchi = false;
           }
@@ -279,13 +312,10 @@ let personajeX = xInicial;
     arr_mapa[personajeY][personajeX].classList.add('personaje'); // addClassToArrMap(y,x, class)
     arr_mapa[personajeY][personajeX].classList.remove('pisado');  // removeClassFromArrMap(y,x, class)
     checkCajas();
-    if(puedeSalir && personajeY == yInicial && personajeX == xInicial){
+    if(hayLibro && hayLlave && personajeY == yInicial && personajeX == xInicial){
       pasarDeNivel();
     }
   }
-function pasarDeNivel() {
-  //TODO
-}
 
     // Dibuja el mapa en el DOM
       function  mostrarMapa(){
@@ -408,10 +438,9 @@ function pasarDeNivel() {
             setTimeout(function(){
               mapa[y+2][x+3] = 5;
               enemigos[cantEnemigos] = {x:x+3,y:y+2,vivo:true};
+              cantEnemigos++;
             }, 1000);
-            setTimeout(function() {
-              // arr_mapa[y+1][x+2].classList.remove("spawn");
-            },2000);
+
         break;
         default:
         break;
