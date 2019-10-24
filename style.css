@@ -70,6 +70,37 @@
   content: var(--vidas-text)var(--vidas);
 }
 
+.leyenda1, .leyenda2, .leyenda3, .leyenda4{
+  background-color: var(--color-pared);
+}
+.leyenda1:after, .leyenda2:after, .leyenda3:after, .leyenda4:after{
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  width: 100%;
+  height:50px ;
+  color: pink;
+  z-index: 3;
+  animation: priority 1s infinite;
+}
+.leyenda1:after {
+  background-image: url("llave2.png");
+  content: "Get both";
+}
+.leyenda2:after {
+  background-image: url("book.gif");
+  content: "::to exit";
+}
+.leyenda3:after {
+  background-size: 80%;
+  background-image: url("cuchi.png");
+  content: "Kill with";
+}
+.leyenda4:after {
+  content: "to move:: W A S D ";
+}
+
 .personaje, .enemy {
   --height-character: 50px;
   --margin-character: -20% 0px 0px 0px;
