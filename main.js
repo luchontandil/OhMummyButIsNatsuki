@@ -291,22 +291,9 @@ let personajeX = xInicial;
     if(dirreccion=="izq"){
       if(canMove(personajeY, personajeX-1)) personajeX--
     }
-    for (var i = 0; i < enemigos.length; i++) {
-      if(enemigos[i].vivo){
-        if(enemigos[i].x == personajeX && enemigos[i].y == personajeY){
-          enemigos[i].vivo = false;
-          arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove("enemy");
-          cantEnemigos--;
-          if (hayCuchi) {
-            hayCuchi = false;
-          }
-          else{
-            vidas--;
-            setVidas(vidas);
-          }
-        }
-      }
-    }
+
+    if(arr_mapa[personajeY][personajeX].classList.value.includes("enemy")){eliminarEnemigo();}
+
     mapaPisadas[personajeY][personajeX] = 3; //setMapPisadas(y,x, CODE)
     mapa[personajeY][personajeX] = 1;   //setMap(y,x, CODE)
     arr_mapa[personajeY][personajeX].classList.add('personaje'); // addClassToArrMap(y,x, class)
@@ -314,6 +301,34 @@ let personajeX = xInicial;
     checkCajas();
     if(hayLibro && hayLlave && personajeY == yInicial && personajeX == xInicial){
       pasarDeNivel();
+    }
+  }
+
+  function eliminarEnemigo() {
+    for (var i = 0; i < enemigos.length; i++) {
+      if(enemigos[i].vivo){
+        if(enemigos[i].x == personajeX && enemigos[i].y == personajeY){
+          enemigos[i].vivo = false;
+          arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove("enemy");
+          bubble(enemigos);
+          cantEnemigos--;
+          if (hayCuchi) hayCuchi = false
+          else vidas--; setVidas(vidas)
+        }
+      }
+    }
+  }
+
+  function bubble(arr) {
+    var len = arr.length;
+    for (var i = 0; i < len ; i++) {
+      for(var j = 0 ; j < len - i - 1; j++){
+      if (!arr[j].vivo) {
+        var temp = arr[j];
+        arr[j] = arr[j+1];
+        arr[j + 1] = temp;
+      }
+     }
     }
   }
 
