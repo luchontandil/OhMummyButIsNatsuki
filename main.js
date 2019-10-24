@@ -169,7 +169,7 @@ let personajeX = xInicial;
   //TODO: reescribir esta basura
   function moverEnemigos() {
     var movio;
-    for (var i = 0; i < enemigos.length; i++) {
+    for (var i = 0; i < cantEnemigos; i++) {
       movio = false;
       // Arriba
       if (enemigos[i].vivo) {
@@ -327,15 +327,15 @@ let personajeX = xInicial;
     if (vidas==0) gameOver()
   }
   function gameOver() {
-    alert("GAME OVER");
+    alert("GAME OVER \n PUNTAJE: "+puntaje);
 
     clearInterval(moveEnemies);
+    cantEnemigos=1;
     restoreMaps();
     mostrarMapa();
     setNivel(1);
     setVidas(5);
     setPuntaje(-puntaje);
-    cantEnemigos=1;
     hayLlave = false;
     hayLibro = false;
     hayCuchi = false;
@@ -365,9 +365,9 @@ let personajeX = xInicial;
 
     // Dibuja el mapa en el DOM
   function  mostrarMapa(){
-    //Borro el contenido del div padre
+    // Borro el contenido del div padre
     mapa_div.innerHTML = "";
-    //Genero el mapa a partir de "mapa"
+    // Genero el mapa a partir de "mapa"
       mapa.forEach(function(element){
         for (var i = 0; i < element.length; i++) {
           var node = document.createElement("div");
@@ -412,26 +412,11 @@ let personajeX = xInicial;
     }
     // Ver caja por caja si esta pintada o no, si no ejecutar mirarAlrededor()
   function checkCajas() {
-    if(mapaPisadas[3][2+1]!= true)mirarAlrededor(3,2);
-    if(mapaPisadas[3][6+1]!= true)mirarAlrededor(3,6);
-    if(mapaPisadas[3][10+1]!=true)mirarAlrededor(3,10);
-    if(mapaPisadas[3][14+1]!=true)mirarAlrededor(3,14)
-    if(mapaPisadas[3][18+1]!=true)mirarAlrededor(3,18);
-    if(mapaPisadas[6][2+1]!=true)mirarAlrededor(6,2);
-    if(mapaPisadas[6][6+1]!=true)mirarAlrededor(6,6);
-    if(mapaPisadas[6][10+1]!=true)mirarAlrededor(6,10);
-    if(mapaPisadas[6][14+1]!=true)mirarAlrededor(6,14);
-    if(mapaPisadas[6][18+1]!=true)mirarAlrededor(6,18);
-    if(mapaPisadas[9][2+1]!=true)mirarAlrededor(9,2);
-    if(mapaPisadas[9][6+1]!=true)mirarAlrededor(9,6);
-    if(mapaPisadas[9][10+1]!=true)mirarAlrededor(9,10);
-    if(mapaPisadas[9][14+1]!=true)mirarAlrededor(9,14);
-    if(mapaPisadas[9][18+1]!=true)mirarAlrededor(9,18);
-    if(mapaPisadas[12][2+1]!=true)mirarAlrededor(12,2);
-    if(mapaPisadas[12][6+1]!=true)mirarAlrededor(12,6);
-    if(mapaPisadas[12][10+1]!=true)mirarAlrededor(12,10);
-    if(mapaPisadas[12][14+1]!=true)mirarAlrededor(12,14);
-    if(mapaPisadas[12][18+1]!=true)mirarAlrededor(12,18);
+    for (var y = 3; y <= 12; y+=3) {
+      for (var x = 2; x <= 18; x+=4) {
+        if(mapaPisadas[y][x+1]!=true)mirarAlrededor(y,x);
+      }
+    }
   }
     // Checkea uno por uno los cuadros adyacentes para ver si estan todos "pisados"
   function mirarAlrededor(y,x) {
