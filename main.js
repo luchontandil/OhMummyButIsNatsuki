@@ -5,7 +5,7 @@ const _FILAS =  16;
 let mapa_div = document.getElementById('mapa');
 let arr_mapa_div;
 
-let pasillosY = [5,8,11,14];
+let pasillosY = [5,6,7,8,9,10,11,12,13,14];
 let pasillosX = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
 let cantEnemigos = 1;
 let enemigos = [];
@@ -156,8 +156,8 @@ let personajeX = xInicial;
   function spawnearEnemigos() {
     for (var i = 0; i < cantEnemigos; i++) {
       enemigos[i] = {x:shuffle(pasillosX)[0],y:shuffle(pasillosY)[0],vivo:true};
-      for (var j = 0; j < i; j++) {
-        while(enemigos[j].x == enemigos[i].x && enemigos[j].y == enemigos[i].y) {
+      for (var j = 0; j <= i; j++) {
+        while(enemigos[j].x == enemigos[i].x && enemigos[j].y == enemigos[i].y && mapa[enemigos[i].y][enemigos[i].x] == 4) {
           enemigos[i] = {x:shuffle(pasillosX)[0],y:shuffle(pasillosY)[0],vivo:true};
         }
       }
@@ -312,14 +312,17 @@ let personajeX = xInicial;
     for (var i = 0; i < enemigos.length; i++) {
       if(enemigos[i].vivo){
         if(enemigos[i].x == personajeX && enemigos[i].y == personajeY){
-          setPuntaje(50*nivel);
+
           enemigos[i].vivo = false;
           arr_mapa[enemigos[i].y][enemigos[i].x].classList.remove("enemy");
           mapa[enemigos[i].y][enemigos[i].x] = 1;
           bubble(enemigos);
           cantEnemigos--;
-          if (hayCuchi) hayCuchi = false
-          else vidas--;
+          if (hayCuchi) {
+            hayCuchi = false;
+            setPuntaje(50*nivel);
+          }
+          else{vidas--;}
           setVidas(vidas);
         }
       }
