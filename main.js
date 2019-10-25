@@ -117,7 +117,7 @@ let personajeX = xInicial;
     var cantCeros = 7;
     var output = "";
     cantCeros-=puntaje.toString(10).length;
-    console.log(mapa_div.getElementsByClassName("score")[0].style.getPropertyValue("--score"));
+    // console.log(mapa_div.getElementsByClassName("score")[0].style.getPropertyValue("--score"));
     for (var i = 0; i < cantCeros; i++) {
       output+="0";
     }
@@ -505,7 +505,27 @@ let personajeX = xInicial;
     else if (e.which == 87) {
       mover("arriba");
     }
+  }
 
+  document.querySelector('.down').addEventListener('touchstart', touch_move);
+  document.querySelector('.up').addEventListener('touchstart', touch_move);
+  document.querySelector('.left').addEventListener('touchstart', touch_move);
+  document.querySelector('.right').addEventListener('touchstart', touch_move);
+
+  function touch_move(ev) {
+    ev.preventDefault();
+    if (ev.target.classList.value == "down"){
+      mover("abajo");
+    }
+    else if (ev.target.classList.value == "left") {
+      mover("izq");
+    }
+    else if (ev.target.classList.value == "right") {
+      mover("der");
+    }
+    else if (ev.target.classList.value == "up") {
+      mover("arriba");
+    }
   }
 
   // Setteo las propiedades de las clases segun el tamaño de la ventana en el tag style del dom
@@ -534,6 +554,11 @@ let personajeX = xInicial;
     //puerta abierta
     style.innerHTML +=
     ".puertaAbierta{background-image: linear-gradient(to top, grey, black);}";
+    // triangulos para el touchscreen
+    style.innerHTML +=
+    ".up,.down{height:+"+(window.innerHeight/2)+"px;}"+
+    ".left,.right{height:"+(window.innerHeight)+"px;}";
+
   }
   // re-size en real time
   window.addEventListener('resize', function(){

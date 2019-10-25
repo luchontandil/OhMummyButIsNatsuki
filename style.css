@@ -386,6 +386,35 @@
   background-color: var(--color-pared);
 }
 
+.up,.right,.down,.left{
+  /* visibility: hidden; */
+  position: absolute;
+  width: 100%;
+  height: 250px;
+  z-index: 20;
+  opacity: 0; 
+}
+.up{
+  left: 0;
+  background-color: blue;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+}
+.left{
+  left: 0;
+  background-color: green;
+  clip-path: polygon(50% 50%, 0 0, 0 100%);
+}
+.right{
+  right: 0;
+  background-color: yellow;
+  clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+}
+.down{
+  bottom: 0;
+  background-color: red;
+  clip-path: polygon(50% 0, 0 100%, 100% 100%);
+}
+
 body {
   background-color: var(--color-camino-bot);
   height: 100%;
