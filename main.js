@@ -129,10 +129,10 @@ let personajeX = xInicial;
     clearInterval(moveEnemies);
     restoreMaps();
     mostrarMapa();
+    setPuntaje(1000*nivel);
     nivel++;
     setNivel(nivel);
     setVidas(vidas);
-    setPuntaje(1000*nivel);
     cantEnemigos++;
     hayLlave = false;
     hayLibro = false;
@@ -507,11 +507,11 @@ let personajeX = xInicial;
     }
   }
 
+  // touchscreen del movil
   document.querySelector('.down').addEventListener('touchstart', touch_move);
   document.querySelector('.up').addEventListener('touchstart', touch_move);
   document.querySelector('.left').addEventListener('touchstart', touch_move);
   document.querySelector('.right').addEventListener('touchstart', touch_move);
-
   function touch_move(ev) {
     ev.preventDefault();
     if (ev.target.classList.value == "down"){
@@ -527,6 +527,7 @@ let personajeX = xInicial;
       mover("arriba");
     }
   }
+
 
   // Setteo las propiedades de las clases segun el tamaño de la ventana en el tag style del dom
   function resize() {
