@@ -265,6 +265,7 @@ let personajeX = xInicial;
   function mover(dirreccion) {
     function canMove(y, x) {
       const cellValue = mapa[y][x]
+      if(mapaPisadas[y][x] != 3){ setPuntaje(5*nivel); }
       return cellValue != 0 && cellValue != 4 && cellValue != 10
     }
 
@@ -273,7 +274,6 @@ let personajeX = xInicial;
 
     if(dirreccion=="arriba"){
       if(canMove(personajeY-1, personajeX)){personajeY--;
-        setPuntaje(5*nivel);
       }
     }
     if(dirreccion=="abajo"){
@@ -284,19 +284,17 @@ let personajeX = xInicial;
           arr_mapa[yInicial][xInicial].classList.add("cerrarPuerta");
           mapa[yInicial][xInicial] = 10;
         }
-        setPuntaje(5*nivel);
       }
     }
     if(dirreccion=="der"){
       if(canMove(personajeY, personajeX+1)){personajeX++
-        setPuntaje(5*nivel);
       }
     }
     if(dirreccion=="izq"){
       if(canMove(personajeY, personajeX-1)){personajeX--
-        setPuntaje(5*nivel);
       }
     }
+
     if(arr_mapa[personajeY][personajeX].classList.value.includes("enemy")){eliminarEnemigo();}
     mapaPisadas[personajeY][personajeX] = 3; //setMapPisadas(y,x, CODE)
     mapa[personajeY][personajeX] = 1;   //setMap(y,x, CODE)

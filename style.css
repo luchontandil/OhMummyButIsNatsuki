@@ -57,7 +57,7 @@
 
 .vidas {
   --vidas: "5";
-  --vidas-text: "Lifes::";
+  --vidas-text: "Lives::";
   background-color: var(--color-pared);
   background-size: 100%;
   overflow-x: visible;
@@ -416,7 +416,7 @@
 }
 
 body {
-  background-color: var(--color-camino-bot);
+  background-color: black;
   height: 100%;
   margin: 0;
   padding: 0;
